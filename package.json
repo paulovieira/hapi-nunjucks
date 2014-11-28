@@ -1,4 +1,10 @@
 {
+  "name": "hapi-nunjucks",
+  "version": "0.0.2",
+  "description": "Use nunjucks templates with hapijs",
+  "main": "index.js",
+  "author": "Paulo Vieira",
+  "license": "ISC",
   "dependencies": {
     "nunjucks": "^1.1.0"
   }

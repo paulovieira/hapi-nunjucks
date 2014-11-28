@@ -1,0 +1,22 @@
+layout-1.html - header 
+
+<br>
+
+{% block top %}
+	this is top block from layout-1.html
+	<br>
+	global1.a (from layout-1):  {{ global1.a }}
+{% endblock %}
+
+<br>
+
+{% block bottom %}
+	this is bottom block from layout-1.html
+	<br>
+	global1.a (from layout-1):  {{ global1.a }}
+	<br>
+	username: {{ username }}
+	<br>
+	global2: {{ global2 }}
+{% endblock %}
+

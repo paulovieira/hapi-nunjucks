@@ -1,0 +1,31 @@
+
+{% extends "layouts/layout-1.html" %} 
+
+Since this template extends layout-1, and layout-1 has blocks, we must define blocks with the same names and all the content must be placed inside those blocks. So this part right here won't be visible.
+hey there! this is page 3
+
+
+<br>
+
+{% block top %}
+	this is top block from page-1.html
+	<br>
+	global1.a (from page-1):  {{ global1.a }}
+	<br>
+	username: {{ username }}
+	<br>
+	global2: {{ global2 }}
+{% endblock %}
+
+<br>
+
+{# if we omit block bottom, the content inside the bottom block from layout-1 is what will be be shown #}
+
+{% block bottom %}
+	this is bottom block from page-1.html
+	<br>
+	global1.a (from page-1):  {{ global1.a }}
+
+	{% include "includes/inc-1.html" %}
+{% endblock %}
+
