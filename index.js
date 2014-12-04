@@ -9,9 +9,6 @@ var internals = {
 }
 
 
-//Nunjucks.configure(Path.join(__dirname, 'templates/zzz'));
-//Nunjucks.configure('/home/pvieira/jsLab/nunjucks/templates/zzz');
-debugger;
 module.exports = {
 
 	compile: function(template, compileOptions){
