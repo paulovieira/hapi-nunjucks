@@ -14,7 +14,7 @@ module.exports = {
 	compile: function(template, compileOptions){
 //			...
 
-debugger;
+
 		template += ("date of compilation: " + new Date());
 
 		var env = internals.environment,
