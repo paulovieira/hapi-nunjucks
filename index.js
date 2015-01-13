@@ -13,7 +13,6 @@ module.exports = {
 
 	compile: function(template, compileOptions){
 
-
 //		template += ("date of compilation: " + new Date());
 
 		var env = internals.environment,
