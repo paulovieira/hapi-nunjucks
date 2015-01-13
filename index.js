@@ -12,10 +12,9 @@ var internals = {
 module.exports = {
 
 	compile: function(template, compileOptions){
-//			...
 
 
-		template += ("date of compilation: " + new Date());
+//		template += ("date of compilation: " + new Date());
 
 		var env = internals.environment,
 			path = internals.environment.loaders[0].searchPaths;
