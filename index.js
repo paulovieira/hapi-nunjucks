@@ -6,7 +6,7 @@ var Nunjucks = require("nunjucks");
 // the configure method should be set manually in the application code, passing the searchPath; 
 var internals = {
 	environment: Nunjucks.configure({ 
-		wait: false
+		watch: false
 	})
 }
 

@@ -1,0 +1,41 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'publish' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.37
+4 verbose node symlink /usr/bin/node
+5 verbose publish [ '.' ]
+6 verbose cache add [ '.', null ]
+7 verbose cache add name=undefined spec="." args=[".",null]
+8 verbose parsed url { protocol: null,
+8 verbose parsed url   slashes: null,
+8 verbose parsed url   auth: null,
+8 verbose parsed url   host: null,
+8 verbose parsed url   port: null,
+8 verbose parsed url   hostname: null,
+8 verbose parsed url   hash: null,
+8 verbose parsed url   search: null,
+8 verbose parsed url   query: null,
+8 verbose parsed url   pathname: '.',
+8 verbose parsed url   path: '.',
+8 verbose parsed url   href: '.' }
+9 silly lockFile 3a52ce78- .
+10 verbose lock . /home/pvieira/.npm/3a52ce78-.lock
+11 silly lockFile 3a52ce78- .
+12 silly lockFile 3a52ce78- .
+13 error addLocal Could not install .
+14 error Error: EACCES, mkdir '/home/pvieira/.npm/hapi-nunjucks/0.0.4'
+14 error  { [Error: EACCES, mkdir '/home/pvieira/.npm/hapi-nunjucks/0.0.4']
+14 error   errno: 3,
+14 error   code: 'EACCES',
+14 error   path: '/home/pvieira/.npm/hapi-nunjucks/0.0.4' }
+15 error Please try running this command again as root/Administrator.
+16 error System Linux 3.8.0-35-generic
+17 error command "/usr/bin/node" "/usr/bin/npm" "publish"
+18 error cwd /home/pvieira/github/hapi-nunjucks
+19 error node -v v0.10.37
+20 error npm -v 1.4.28
+21 error path /home/pvieira/.npm/hapi-nunjucks/0.0.4
+22 error code EACCES
+23 error errno 3
+24 error stack Error: EACCES, mkdir '/home/pvieira/.npm/hapi-nunjucks/0.0.4'
+25 verbose exit [ 3, true ]

@@ -1,6 +1,6 @@
 {
   "name": "hapi-nunjucks",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Use nunjucks templates with hapijs",
   "main": "index.js",
   "author": "Paulo Vieira",
