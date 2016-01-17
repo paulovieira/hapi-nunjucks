@@ -6,6 +6,6 @@
   "author": "Paulo Vieira",
   "license": "ISC",
   "dependencies": {
-    "nunjucks": "^1.1.0"
+    "nunjucks": "2.x.x"
   }
 }

@@ -1,45 +1,51 @@
-var Path = require('path');
+var Path = require("path");
 var Nunjucks = require("nunjucks");
 
-// get a default environment; the default seach path is the same directory where the
-// main script was executed;
-// the configure method should be set manually in the application code, passing the searchPath; 
-var internals = {
-	environment: Nunjucks.configure({ 
-		watch: false
-	})
-}
+// all the exported properties from Nunjucks module are available in the wrapper
+Object.keys(Nunjucks).forEach(function(key){
 
+    module.exports[key] = Nunjucks[key];
+});
 
-module.exports = {
+// redefine Nunjucks.compile to be compliant with the Hapi/Vision API
+module.exports.compileOriginal = Nunjucks.compile;
 
-	compile: function(template, compileOptions){
+module.exports.compile = function(str, compileOptions, next){
 
-//		template += ("date of compilation: " + new Date());
+    var compileMode = "sync";
+    if(next){
+        compileMode = "async";
+    }
 
-		var env = internals.environment,
-			path = internals.environment.loaders[0].searchPaths;
-	
-		var compiledTemplate = Nunjucks.compile(template, env, path);
+    var compiled = null;
 
-		return function(context, runtimeOptions){
-			
-			var html = compiledTemplate.render(context);
-			return html;
-		}
+    if(compileMode === "sync"){
 
-	},
+        // compileMode is "sync" (the default); The Vision docs say:
+        //   "the return value is a function [the compiled template] with signature 
+        //   function(context, options), and the method is allowed to throw errors"
 
-	configure: function(path, opts){
-		internals.environment = Nunjucks.configure(path, opts);
-	},
+        compiled = function(ctx, runtimeOptions){
 
-	addFilter: function(name, filter){
-		internals.environment.addFilter(name, filter);
-	},
+            return Nunjucks.render(Path.basename(compileOptions.filename), ctx);
+        };
 
-	addGlobal: function(name, value){
-		internals.environment.addGlobal(name, value);
-	}
+        return compiled;           
+    }
+    else{
+        // compileMode is "async"; The Vision docs say:
+        //   "next has the signature function(err, compiled), where
+        //     - compiled should be a function with signature function(context, options, callback)
+        //     - callback has the signature function(err, rendered) "
 
-}
+        compiled = function(ctx, runtimeOptions, callback){
+
+            Nunjucks.render(Path.basename(compileOptions.filename), ctx, callback);
+            return;
+        };
+
+        next(null, compiled);
+        return;        
+    }
+
+};
