@@ -1,14 +1,24 @@
 var Path = require("path");
 var Nunjucks = require("nunjucks");
 
-// all the exported properties from Nunjucks module are available in the wrapper
-Object.keys(Nunjucks).forEach(function(key){
+var internals = {};
+internals.env = Nunjucks.configure();
 
-    module.exports[key] = Nunjucks[key];
-});
+// all the exported properties from Nunjucks module are available in the wrapper
+// Object.keys(Nunjucks).forEach(function(key){
+
+//     module.exports[key] = Nunjucks[key];
+// });
 
 // redefine Nunjucks.compile to be compliant with the Hapi/Vision API
-module.exports.compileOriginal = Nunjucks.compile;
+// module.exports.compileOriginal = Nunjucks.compile;
+// module.exports.configureOriginal = Nunjucks.configure;
+// module.exports.renderOriginal = Nunjucks.render;
+
+module.exports.configure = function(templatesPath, opts) {
+    internals.env = Nunjucks.configure(templatesPath, opts);
+    return internals.env;
+};
 
 module.exports.compile = function(str, compileOptions, next){
 
@@ -27,7 +37,8 @@ module.exports.compile = function(str, compileOptions, next){
 
         compiled = function(ctx, runtimeOptions){
 
-            return Nunjucks.render(Path.basename(compileOptions.filename), ctx);
+            //return Nunjucks.render(Path.basename(compileOptions.filename), ctx);
+            return internals.env.render(Path.basename(compileOptions.filename), ctx);
         };
 
         return compiled;           
@@ -40,7 +51,9 @@ module.exports.compile = function(str, compileOptions, next){
 
         compiled = function(ctx, runtimeOptions, callback){
 
-            Nunjucks.render(Path.basename(compileOptions.filename), ctx, callback);
+            //Nunjucks.render(Path.basename(compileOptions.filename), ctx, callback);
+            internals.env.render(Path.basename(compileOptions.filename), ctx, callback);
+            
             return;
         };
 
@@ -49,3 +62,48 @@ module.exports.compile = function(str, compileOptions, next){
     }
 
 };
+
+module.exports.render = function(name, ctx, cb) {
+    return internals.env.render(name, ctx, cb);
+};
+
+module.exports.renderString = function(src, ctx, cb) {
+    return internals.env.renderString(src, ctx, cb);
+};
+
+module.exports.precompile = Nunjucks.precompile.precompile;
+module.exports.precompileString = Nunjucks.precompile.precompileString;
+
+
+module.exports.getCompile = function(env){
+
+    return function(str, compileOptions, next){
+
+        var compileMode = "sync";
+        if(next){
+            compileMode = "async";
+        }
+
+        var compiled = null;
+
+        if(compileMode === "sync"){
+
+            compiled = function(ctx, runtimeOptions){
+                return env.render(Path.basename(compileOptions.filename), ctx);
+            };
+
+            return compiled;           
+        }
+        else{
+
+            compiled = function(ctx, runtimeOptions, callback){
+                env.render(Path.basename(compileOptions.filename), ctx, callback);
+                return;
+            };
+
+            next(null, compiled);
+            return;        
+        }
+    };
+    
+}
