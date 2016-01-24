@@ -2,7 +2,8 @@ var Path = require("path");
 var Nunjucks = require("nunjucks");
 
 var internals = {};
-internals.env = Nunjucks.configure();
+internals.env = {};
+internals.env["default"] = Nunjucks.configure();
 
 // all the exported properties from Nunjucks module are available in the wrapper
 // Object.keys(Nunjucks).forEach(function(key){
@@ -16,12 +17,19 @@ internals.env = Nunjucks.configure();
 // module.exports.renderOriginal = Nunjucks.render;
 
 module.exports.configure = function(templatesPath, opts) {
-    internals.env = Nunjucks.configure(templatesPath, opts);
-    return internals.env;
+    debugger;
+    var pluginName = opts.pluginName || "default";
+    delete opts.pluginName;
+    internals.env[pluginName] = Nunjucks.configure(templatesPath, opts);
+    console.log("templatesPath", templatesPath);
+    return internals.env[pluginName];
 };
 
 module.exports.compile = function(str, compileOptions, next){
-
+debugger;
+console.log("compileOptions\n: ", compileOptions);
+//console.log("internals.env: ", Object.keys(internals.env))
+    var pluginName = compileOptions.pluginName || "default";
     var compileMode = "sync";
     if(next){
         compileMode = "async";
@@ -36,9 +44,12 @@ module.exports.compile = function(str, compileOptions, next){
         //   function(context, options), and the method is allowed to throw errors"
 
         compiled = function(ctx, runtimeOptions){
-
+            
+            console.log("inside the compiled, ", pluginName);
             //return Nunjucks.render(Path.basename(compileOptions.filename), ctx);
-            return internals.env.render(Path.basename(compileOptions.filename), ctx);
+            //return internals.env.render(Path.basename(compileOptions.filename), ctx);
+            //return internals.env.render(compileOptions.filename, ctx);
+            return internals.env[pluginName].render(compileOptions.filename, ctx);
         };
 
         return compiled;           
@@ -52,7 +63,9 @@ module.exports.compile = function(str, compileOptions, next){
         compiled = function(ctx, runtimeOptions, callback){
 
             //Nunjucks.render(Path.basename(compileOptions.filename), ctx, callback);
-            internals.env.render(Path.basename(compileOptions.filename), ctx, callback);
+            //internals.env.render(Path.basename(compileOptions.filename), ctx, callback);
+            //internals.env.render(compileOptions.filename, ctx, callback);
+            internals.env[pluginName].render(compileOptions.filename, ctx, callback);
             
             return;
         };
@@ -64,21 +77,22 @@ module.exports.compile = function(str, compileOptions, next){
 };
 
 module.exports.render = function(name, ctx, cb) {
-    return internals.env.render(name, ctx, cb);
+    return internals.env["default"].render(name, ctx, cb);
 };
 
 module.exports.renderString = function(src, ctx, cb) {
-    return internals.env.renderString(src, ctx, cb);
+    return internals.env["default"].renderString(src, ctx, cb);
 };
 
 module.exports.precompile = Nunjucks.precompile.precompile;
 module.exports.precompileString = Nunjucks.precompile.precompileString;
 
-
+/*
 module.exports.getCompile = function(env){
 
     return function(str, compileOptions, next){
-
+console.log("compileOptions\n: ", compileOptions);
+console.log("internals.env: ", Object.keys(internals.env))
         var compileMode = "sync";
         if(next){
             compileMode = "async";
@@ -89,7 +103,8 @@ module.exports.getCompile = function(env){
         if(compileMode === "sync"){
 
             compiled = function(ctx, runtimeOptions){
-                return env.render(Path.basename(compileOptions.filename), ctx);
+                //return env.render(Path.basename(compileOptions.filename), ctx);
+                return env.render(compileOptions.filename, ctx);
             };
 
             return compiled;           
@@ -97,7 +112,8 @@ module.exports.getCompile = function(env){
         else{
 
             compiled = function(ctx, runtimeOptions, callback){
-                env.render(Path.basename(compileOptions.filename), ctx, callback);
+                //env.render(Path.basename(compileOptions.filename), ctx, callback);
+                env.render(compileOptions.filename, ctx, callback);
                 return;
             };
 
@@ -107,3 +123,4 @@ module.exports.getCompile = function(env){
     };
     
 }
+*/
